@@ -1,3 +1,4 @@
+''' Simple Connect4 game '''
 board = [[" ", " ", " ", " ", " ", " "], [" ", " ", " ", " ", " ", " "], [" ", " ", " ", " ", " ", " "], [" ", " ", " ", " ", " ", " "], [" ", " ", " ", " ", " ", " "], [" ", " ", " ", " ", " ", " "], [" ", " ", " ", " ", " ", " "]]
 COLUMN_COUNT = 7
 ROW_COUNT = 6
@@ -38,47 +39,37 @@ def is_valid_location(col):
     else:
         return False
 def check_winner(board,player):
-	# Check horizontal locations for win
-	for c in range(COLUMN_COUNT-2):
+	# Check horizontals
+	for c in range(COLUMN_COUNT-3):
 		for r in range(ROW_COUNT):
-			if board[c+1][r] == player and board[c+2][r] == player and board[c+3][r] == player and board[c+4][r] == player:
+			if board[c][r] == player and board[c+1][r] == player and board[c+2][r] == player and board[c+3][r] == player:
 				return True
-
-	# Check vertical locations for win
+	# Check verticals
 	for c in range(COLUMN_COUNT):
-		for r in range(ROW_COUNT-3):
-			if board[c][r] == player and board[c][r+1] == player and board[c][r+2] == player and board[c][r-1] == player:
-				return True
-
-	# Check positively sloped diaganols
+	 	for r in range(ROW_COUNT-3):
+	 		if board[c][r] == player and board[c][r+1] == player and board[c][r+2] == player and board[c][r+3] == player:
+	 			return True
+    # Check forward diaganols
 	for c in range(COLUMN_COUNT-3):
 		for r in range(ROW_COUNT-3):
 			if board[r][c] == player and board[r+1][c+1] == player and board[r+2][c+2] == player and board[r+3][c+3] == player:
 				return True
-
-	# Check negatively sloped diaganols
+	# Check backward diaganols
 	for c in range(COLUMN_COUNT-3):
-		for r in range(3, ROW_COUNT):
-			if board[r][c] == player and board[r-1][c+1] == player and board[r-2][c+2] == player and board[r-3][c+3] == player:
-				return True
-def main():
-    draw_field(board)
+	 	for r in range(3, ROW_COUNT):
+	 		if board[r][c] == player and board[r-1][c+1] == player and board[r-2][c+2] == player and board[r-3][c+3] == player:
+	 			return True
+def main():  
     game_over = False
     player = 1
-    turn = 0
     while not game_over:
         if player == 1 :
             col = int(input("Player 1, enter a digit from 1-7: \n"))
             if is_valid_location(col) == False:
                 print('invalid move')
             else:
-                # get_open_row(board,col)
                 update_board(col-1,player)
                 player = 2   
-                winner = check_winner(board,player=2)
-                if winner == True:
-                    print(player,"wins")
-                    game_over = True 
         else:
             col = int(input("Player 2, enter a digit from 1-7: \n")) 
             if is_valid_location(col) == False:
@@ -86,12 +77,15 @@ def main():
             else:
                 update_board(col-1,player)
                 player = 1
-                winner = check_winner(board,player=2)
-                if winner == True:
-                    print(player,"wins")
-                    game_over = True             
-        turn +=1
-    draw_field(board)
+        if check_winner(board,'X'):
+            player = 1
+            print("player",player,"wins")
+            game_over = True  
+        elif check_winner(board,'O'):
+            player = 2
+            print("player",player,"wins")
+            game_over = True       
+draw_field(board)
 main()
     
 
